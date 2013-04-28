@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="JEOPLe : Easy Object Persistence for Java" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>JEOPLe</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/reda-ea/jeople">View on GitHub</a>
+
+          <h1 id="project_title">JEOPLe</h1>
+          <h2 id="project_tagline">Easy Object Persistence for Java</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/reda-ea/jeople/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/reda-ea/jeople/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h2>What is it ?</h2>
+
+<p>It allows you to do</p>
+
+<div class="highlight"><pre><span class="n">db</span><span class="o">.</span><span class="na">select</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">where</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">olderThan</span><span class="o">(</span><span class="mi">10</span><span class="o">)).</span><span class="na">orderBy</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">nameLength</span><span class="o">())</span>
+</pre></div>
+
+<h2>Really. What is it ?</h2>
+
+<p>Basically, it's an Object persistence layer with the following design principles:</p>
+
+<ol>
+<li>No configuration. None. Just code.</li>
+<li>No generated code. Just the code you type. No boilerplate code either.</li>
+<li>Natural Java syntax (as in the example above). Also, standard types are used whenever possible (eg. the select query above is an <code>Iterable&lt;Person&gt;</code>).</li>
+<li>Client side conditions and sorting<sup>[1]</sup>, making it possible to define "where" conditions on Java <code>Object</code>s instead of database SQL, and to sort using standard Java <code>Comparator</code>s. </li>
+<li>Data source agnostic design. It defaults to JDBC, but can as well be used to store data in a file or over a webservice...
+And most importantly</li>
+<li>Ease of use. This <a href="./tutorial.md">1 minute tutorial</a> is all you need to get started.</li>
+</ol><h2>Ok but "Jeoples" ? seriously ? what name is this ?</h2>
+
+<p>It sounds like <code>people</code> and looks like an acronym for <code>Java Easy Object Persistance Layer</code>.</p>
+
+<h2>OK, I want it! Where is it ?</h2>
+
+<p>Here, take <a href="./files/jeople-v001.jar">this jar</a>.</p>
+
+<hr><blockquote>
+<p><strong>Please note that the API is still unstable for now.</strong></p>
+
+<p><strong>DO NOT DEPEND ON THE API SYNTAX UNLESS YOU ARE READY TO REWRITE CODE</strong></p>
+</blockquote>
+
+<hr><p>[1] Of course, this means a loss in performance, especially for very large tables, since all records are retrieved from the database to be checked on the client side (by Java code), but this is balanced by the convenience of doing pure object oriented filtering.
+ <em>Plus, this is still a proof of concept, I'm not worrying about performance yet.</em></p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">JEOPLe maintained by <a href="https://github.com/reda-ea">reda-ea</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
