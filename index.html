@@ -10,7 +10,7 @@
 <link rel="stylesheet" type="text/css" media="screen"
 	href="stylesheets/stylesheet.css">
 
-<title>JEOPLe</title>
+<title>JEOPLe : Easy Object Persistence for Java</title>
 </head>
 
 <body>
@@ -42,16 +42,14 @@
 			<p>It allows you to do</p>
 
 			<div class="highlight">
-				<pre>
-					<span class="n">db</span><span class="o">.</span><span class="na">select</span><span
+				<pre><span class="n">db</span><span class="o">.</span><span class="na">select</span><span
 						class="o">(</span><span class="n">Person</span><span class="o">.</span><span
 						class="na">class</span><span class="o">).</span><span class="na">where</span><span
 						class="o">(</span><span class="n">Person</span><span class="o">.</span><span
 						class="na">olderThan</span><span class="o">(</span><span
 						class="mi">10</span><span class="o">)).</span><span class="na">orderBy</span><span
 						class="o">(</span><span class="n">Person</span><span class="o">.</span><span
-						class="na">nameLength</span><span class="o">())</span>
-</pre>
+						class="na">nameLength</span><span class="o">())</span></pre>
 			</div>
 
 			<h2>Really. What is it ?</h2>
@@ -94,15 +92,10 @@
 			<p>
 				Here, take <a href="./files/jeople-v001.jar">this jar</a>.
 			</p>
-
-			<hr>
 			<blockquote>
 				<p>
 					<strong>Please note that the API is still unstable for
-						now.</strong>
-				</p>
-
-				<p>
+						now.</strong><br/>
 					<strong>DO NOT DEPEND ON THE API SYNTAX UNLESS YOU ARE
 						READY TO REWRITE CODE</strong>
 				</p>
