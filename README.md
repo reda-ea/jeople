@@ -12,6 +12,7 @@ It allows you to do
 ### Really. What is it ?
 
 Basically, it's an Object persistence layer with the following design principles:
+
 1. No configuration. None. Just code.
 2. No generated code. Just the code you type. No boilerplate code either.
 3. Natural Java syntax (as in the example above). Also, standard types are used whenever possible (eg. the select query above is an `Iterable<Person>`).
@@ -20,7 +21,7 @@ Basically, it's an Object persistence layer with the following design principles
 And most importantly
 6. Ease of use. This [1 minute tutorial][tuto1] is all you need to get started.
 
-### Ok but "Jeoples" ? what name is this ?
+### Ok but "Jeoples" ? seriously ? what name is this ?
 
 It sounds like "people" and looks like an acronym for "Java Easy Object Persistance Layer".
 
@@ -31,7 +32,8 @@ Here, take [this jar][jar].
 **Please note that the API is still unstable for now.**
 **DO NOT DEPEND ON THE API SYNTAX UNLESS YOU ARE READY TO REWRITE CODE**
 
-[1] Of course, this means a loss in performance, especially for very large tables, since all records are retrieved from the database to be checked on the client side (by Java code), but this is balanced by the convenience of doing pure object oriented filtering. *Plus, this is still a proof of concept, I'm not worrying about performance yet.*
+[1] Of course, this means a loss in performance, especially for very large tables, since all records are retrieved from the database to be checked on the client side (by Java code), but this is balanced by the convenience of doing pure object oriented filtering.
+ *Plus, this is still a proof of concept, I'm not worrying about performance yet.*
 
 [tuto1]: ./tutorial.md
 [jar]: ./jeople-v001.jar
