@@ -36,4 +36,4 @@ Here, take [this jar][jar].
  *Plus, this is still a proof of concept, I'm not worrying about performance yet.*
 
 [tuto1]: ./tutorial.md
-[jar]: ./jeople-v001.jar
+[jar]: ./files/jeople-v001.jar
