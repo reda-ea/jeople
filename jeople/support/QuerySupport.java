@@ -14,6 +14,9 @@ import jeople.Entity;
 import jeople.OrderedQuery;
 import jeople.Query;
 
+
+import jeople.errors.InternalError;
+
 /**
  * Internal {@link Query} implementation. Depends on the
  * {@link DataSourceSupport} implementation of {@link DataSource}.
@@ -46,9 +49,9 @@ public class QuerySupport<T extends Entity> implements Query<T> {
 				try {
 					f.set(entity, value);
 				} catch (IllegalArgumentException e) {
-					throw new Error(e);
+					throw new InternalError(e);
 				} catch (IllegalAccessException e) {
-					throw new Error(e);
+					throw new InternalError(e);
 				}
 	}
 
@@ -60,13 +63,13 @@ public class QuerySupport<T extends Entity> implements Query<T> {
 			dsf.set(entity, data);
 			dsf.setAccessible(false);
 		} catch (NoSuchFieldException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		} catch (SecurityException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		} catch (IllegalArgumentException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		} catch (IllegalAccessException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		}
 	}
 
@@ -79,9 +82,9 @@ public class QuerySupport<T extends Entity> implements Query<T> {
 			QuerySupport.set_entity_fields(t, "key", data);
 			return t;
 		} catch (InstantiationException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		} catch (IllegalAccessException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		}
 	}
 

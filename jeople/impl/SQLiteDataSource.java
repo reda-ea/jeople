@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import jeople.DataSource;
+import jeople.errors.InternalError;
 
 /**
  * Specific SQLite {@link DataSource} implementation.<br>
@@ -42,7 +43,7 @@ public class SQLiteDataSource extends JDBCDataSource {
 			else
 				return super.getColumnValue(resultSet, index, typeName);
 		} catch (SQLException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		}
 	}
 

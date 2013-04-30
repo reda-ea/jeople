@@ -3,6 +3,8 @@ package jeople;
 import java.lang.reflect.Field;
 import java.util.Map;
 
+import jeople.errors.InternalError;
+
 /**
  * Represents an entity. Every entity has to subclass this.<br>
  * public fields in subclasses will be used as entity attributes.<br>
@@ -44,10 +46,10 @@ public class Entity {
 			try {
 				s += sep + f.getName() + "=" + f.get(this).toString();
 				sep = ", ";
-			} catch (IllegalArgumentException e1) {
-				throw new Error(e1);
-			} catch (IllegalAccessException e1) {
-				throw new Error(e1);
+			} catch (IllegalArgumentException e) {
+				throw new InternalError(e);
+			} catch (IllegalAccessException e) {
+				throw new InternalError(e);
 			}
 		s += "}";
 		return s;

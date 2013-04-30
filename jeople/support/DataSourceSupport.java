@@ -8,6 +8,8 @@ import jeople.DataSource;
 import jeople.Entity;
 import jeople.Query;
 
+import jeople.errors.InternalError;
+
 /**
  * Basic customizable {@link DataSource} implementation.<br>
  * Extending this class allows the implementation of a {@link DataSource}
@@ -34,13 +36,13 @@ public abstract class DataSourceSupport implements DataSource {
 			dsf.setAccessible(false);
 			return t;
 		} catch (InstantiationException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		} catch (IllegalAccessException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		} catch (NoSuchFieldException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		} catch (SecurityException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		}
 	}
 
@@ -53,13 +55,13 @@ public abstract class DataSourceSupport implements DataSource {
 			dsf.setAccessible(false);
 			return m;
 		} catch (NoSuchFieldException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		} catch (SecurityException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		} catch (IllegalArgumentException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		} catch (IllegalAccessException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		}
 	}
 
@@ -70,13 +72,13 @@ public abstract class DataSourceSupport implements DataSource {
 			dsf.set(entity, key);
 			dsf.setAccessible(false);
 		} catch (NoSuchFieldException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		} catch (SecurityException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		} catch (IllegalArgumentException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		} catch (IllegalAccessException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		}
 	}
 
@@ -86,9 +88,9 @@ public abstract class DataSourceSupport implements DataSource {
 			try {
 				m.put(f.getName(), f.get(entity));
 			} catch (IllegalArgumentException e) {
-				throw new Error(e);
+				throw new InternalError(e);
 			} catch (IllegalAccessException e) {
-				throw new Error(e);
+				throw new InternalError(e);
 			}
 		}
 		return m;

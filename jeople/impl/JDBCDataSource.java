@@ -15,6 +15,7 @@ import java.util.TreeMap;
 import jeople.DataSource;
 import jeople.Query;
 import jeople.support.DataSourceSupport;
+import jeople.errors.InternalError;
 
 /**
  * Basic JDBC {@link DataSource} implementation.<br>
@@ -59,7 +60,7 @@ public class JDBCDataSource extends DataSourceSupport {
 		try {
 			Class.forName(driver);
 		} catch (ClassNotFoundException e) {
-			throw new Error("Driver not found: " + "org.sqlite.JDBC", e);
+			throw new InternalError("Driver not found: " + "org.sqlite.JDBC", e);
 		}
 		this.url = url;
 		this.user = user;
@@ -89,7 +90,7 @@ public class JDBCDataSource extends DataSourceSupport {
 					this.resultSet = null;
 				}
 			} catch (SQLException e) {
-				throw new Error(e);
+				throw new InternalError(e);
 			}
 		}
 
@@ -109,7 +110,7 @@ public class JDBCDataSource extends DataSourceSupport {
 					this.connection = null;
 				}
 			} catch (SQLException e) {
-				throw new Error(e);
+				throw new InternalError(e);
 			}
 		}
 	}
@@ -140,7 +141,7 @@ public class JDBCDataSource extends DataSourceSupport {
 				while (cs.resultSet.next())
 					tfs.index.add(cs.resultSet.getObject(1));
 			} catch (SQLException e) {
-				throw new Error(e);
+				throw new InternalError(e);
 			}
 			cs.close();
 			return tfs;
@@ -153,7 +154,7 @@ public class JDBCDataSource extends DataSourceSupport {
 		try {
 			return resultSet.getObject(index);
 		} catch (SQLException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		}
 	}
 
@@ -163,7 +164,7 @@ public class JDBCDataSource extends DataSourceSupport {
 		try {
 			statement.setObject(index, value);
 		} catch (SQLException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		}
 	}
 
@@ -173,13 +174,13 @@ public class JDBCDataSource extends DataSourceSupport {
 			ResultSet rs = connection.getMetaData().getColumns(null, null,
 					table, column);
 			if (!rs.next())
-				throw new Error("Table or column not found for " + table + "."
+				throw new InternalError("Table or column not found for " + table + "."
 						+ column);
 			String ret = rs.getString("TYPE_NAME");
 			rs.close();
 			return ret;
 		} catch (SQLException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		}
 	}
 
@@ -197,7 +198,7 @@ public class JDBCDataSource extends DataSourceSupport {
 								md.getColumnTypeName(i + 1)));
 			return m;
 		} catch (SQLException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		}
 	}
 
@@ -211,17 +212,17 @@ public class JDBCDataSource extends DataSourceSupport {
 			cs.statement.setObject(1, tfs.index.get(tfs.position));
 			cs.resultSet = cs.statement.executeQuery();
 			if (!cs.resultSet.next())
-				throw new Error("Record not found for " + tfs.table + "."
+				throw new InternalError("Record not found for " + tfs.table + "."
 						+ this.rowid + " = " + tfs.index.get(tfs.position));
 			Map<String, ?> m = this.fetchData(cs.resultSet);
 			if (cs.resultSet.next())
-				throw new Error("Multiple record found for " + tfs.table + "."
+				throw new InternalError("Multiple record found for " + tfs.table + "."
 						+ this.rowid + " = " + tfs.index.get(tfs.position));
 			cs.close();
 			++tfs.position;
 			return m;
 		} catch (SQLException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		}
 	}
 
@@ -235,7 +236,7 @@ public class JDBCDataSource extends DataSourceSupport {
 			}
 			return this.fetchData(cs.resultSet);
 		} catch (SQLException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		}
 	}
 
@@ -271,9 +272,9 @@ public class JDBCDataSource extends DataSourceSupport {
 					data.get(columns.get(i)));
 		try {
 			if (cs.statement.executeUpdate() != 1)
-				throw new Error("Affected more than one record");
+				throw new InternalError("Affected more than one record");
 		} catch (SQLException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		}
 		cs.close();
 	}
@@ -307,9 +308,9 @@ public class JDBCDataSource extends DataSourceSupport {
 							keycols.get(i)), key.get(keycols.get(i)));
 		try {
 			if (cs.statement.executeUpdate() != 1)
-				throw new Error("Affected more than one record");
+				throw new InternalError("Affected more than one record");
 		} catch (SQLException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		}
 		cs.close();
 	}
@@ -332,9 +333,9 @@ public class JDBCDataSource extends DataSourceSupport {
 					key.get(columns.get(i)));
 		try {
 			if (cs.statement.executeUpdate() != 1)
-				throw new Error("Affected more than one record");
+				throw new InternalError("Affected more than one record");
 		} catch (SQLException e) {
-			throw new Error(e);
+			throw new InternalError(e);
 		}
 		cs.close();
 	}
