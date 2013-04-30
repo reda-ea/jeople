@@ -10,7 +10,7 @@ We'll be working on a database named `PERSON` with the following columns:
 * `NAME` the name of the person
 * `BORN` the person's day of birth
 
-Note that we will use the typename "date" in SQLite even though it doesn't support dates (it will store the typename as it is and we'll use it when nedded)
+Note that we will use the typename `date` in SQLite even though it doesn't support dates (it will store the typename as it is and we'll use it when nedded)
 
 But enough of that, let's start coding.
 
@@ -66,7 +66,7 @@ Since `select` returns a standard Java `Iterator`, we can loop through the retri
 
 ```java
 	for(Person p: db.select(Person.class))
-		System.out.println(p.toString);
+		System.out.println(p.toString());
 ```
 
 The same can be achieved by just printing the whole thing.
@@ -95,7 +95,7 @@ A new `Person` can be created in this data source with
 
 and can be modified and saved just like any other `Person`.
 
-Note that entities creater through their own constructor (eg. `new Person()`) are not attached to a data source, and thus can not be saved.
+Note that entities created through their own constructor (eg. `new Person()`) are not attached to a data source, and thus can not be saved.
 
 Finally, deleting is also done right from the entity, through the `delete()` method.
 
@@ -108,7 +108,7 @@ Finally, deleting is also done right from the entity, through the `delete()` met
 
 #### Advanced querying
 
-What about those "`where`" and "`orderBy`" statements ?
+What about those `where` and `orderBy` statements ?
 
 *I'll write about them later.*
 
