@@ -1,6 +1,5 @@
 package jeople.support;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -13,8 +12,6 @@ import jeople.DataSource;
 import jeople.Entity;
 import jeople.OrderedQuery;
 import jeople.Query;
-
-
 import jeople.errors.InternalError;
 
 /**
@@ -38,48 +35,14 @@ public class QuerySupport<T extends Entity> implements Query<T> {
 		this.conditions = new ArrayList<Condition<T>>();
 	}
 
-	private String tablename() {
-		String[] ss = this.type.getName().split("[\\.\\$]");
-		return ss[ss.length - 1];
-	}
-
-	private void set(T entity, String attribute, Object value) {
-		for (Field f : this.type.getFields())
-			if (f.getName().equalsIgnoreCase(attribute))
-				try {
-					f.set(entity, value);
-				} catch (IllegalArgumentException e) {
-					throw new InternalError(e);
-				} catch (IllegalAccessException e) {
-					throw new InternalError(e);
-				}
-	}
-
-	private static void set_entity_fields(Entity entity, String field,
-			Object data) {
-		try {
-			Field dsf = Entity.class.getDeclaredField(field);
-			dsf.setAccessible(true);
-			dsf.set(entity, data);
-			dsf.setAccessible(false);
-		} catch (NoSuchFieldException e) {
-			throw new InternalError(e);
-		} catch (SecurityException e) {
-			throw new InternalError(e);
-		} catch (IllegalArgumentException e) {
-			throw new InternalError(e);
-		} catch (IllegalAccessException e) {
-			throw new InternalError(e);
-		}
-	}
-
 	private T create(Map<String, ?> data) {
 		try {
 			T t = this.type.newInstance();
 			for (Map.Entry<String, ?> e : data.entrySet())
-				this.set(t, e.getKey(), e.getValue());
-			QuerySupport.set_entity_fields(t, "datasource", this.datasource);
-			QuerySupport.set_entity_fields(t, "key", data);
+				Utils.runHiddenMethod(t, "set_column_value", e.getKey(),
+						e.getValue());
+			Utils.setHiddenField(t, "datasource", this.datasource);
+			Utils.setHiddenField(t, "key", data);
 			return t;
 		} catch (InstantiationException e) {
 			throw new InternalError(e);
@@ -106,8 +69,9 @@ public class QuerySupport<T extends Entity> implements Query<T> {
 			if (this.closed)
 				return null;
 			if (this.state == null)
-				this.state = QuerySupport.this.datasource
-						.select(QuerySupport.this.tablename());
+				this.state = QuerySupport.this.datasource.select((String) Utils
+						.runHiddenMethod(null, "get_tablename",
+								QuerySupport.this.type));
 			Map<String, ?> m = QuerySupport.this.datasource.fetch(this.state);
 			if (m == null) {
 				this.closed = true;

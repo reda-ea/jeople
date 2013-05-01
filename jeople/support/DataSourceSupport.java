@@ -1,13 +1,12 @@
 package jeople.support;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import jeople.DataSource;
 import jeople.Entity;
 import jeople.Query;
-
 import jeople.errors.InternalError;
 
 /**
@@ -30,79 +29,35 @@ public abstract class DataSourceSupport implements DataSource {
 	public <T extends Entity> T create(Class<T> type) {
 		try {
 			T t = type.newInstance();
-			Field dsf = Entity.class.getDeclaredField("datasource");
-			dsf.setAccessible(true);
-			dsf.set(t, this);
-			dsf.setAccessible(false);
+			Utils.setHiddenField(t, "datasource", this);
 			return t;
 		} catch (InstantiationException e) {
 			throw new InternalError(e);
 		} catch (IllegalAccessException e) {
 			throw new InternalError(e);
-		} catch (NoSuchFieldException e) {
-			throw new InternalError(e);
-		} catch (SecurityException e) {
-			throw new InternalError(e);
 		}
-	}
 
-	private static Map<String, ?> getEntityKey(Entity entity) {
-		try {
-			Field dsf = Entity.class.getDeclaredField("key");
-			dsf.setAccessible(true);
-			@SuppressWarnings("unchecked")
-			Map<String, ?> m = (Map<String, ?>) dsf.get(entity);
-			dsf.setAccessible(false);
-			return m;
-		} catch (NoSuchFieldException e) {
-			throw new InternalError(e);
-		} catch (SecurityException e) {
-			throw new InternalError(e);
-		} catch (IllegalArgumentException e) {
-			throw new InternalError(e);
-		} catch (IllegalAccessException e) {
-			throw new InternalError(e);
-		}
-	}
-
-	private static void setEntityKey(Entity entity, Map<String, ?> key) {
-		try {
-			Field dsf = Entity.class.getDeclaredField("key");
-			dsf.setAccessible(true);
-			dsf.set(entity, key);
-			dsf.setAccessible(false);
-		} catch (NoSuchFieldException e) {
-			throw new InternalError(e);
-		} catch (SecurityException e) {
-			throw new InternalError(e);
-		} catch (IllegalArgumentException e) {
-			throw new InternalError(e);
-		} catch (IllegalAccessException e) {
-			throw new InternalError(e);
-		}
 	}
 
 	private static Map<String, ?> getEntityData(Entity entity) {
 		Map<String, Object> m = new HashMap<String, Object>();
-		for (Field f : entity.getClass().getFields()) {
-			try {
-				m.put(f.getName(), f.get(entity));
-			} catch (IllegalArgumentException e) {
-				throw new InternalError(e);
-			} catch (IllegalAccessException e) {
-				throw new InternalError(e);
-			}
-		}
+		@SuppressWarnings("unchecked")
+		List<String> columns = (List<String>) Utils.getHiddenField(entity,
+				"columns");
+		for (String s : columns)
+			m.put(s, Utils.runHiddenMethod(entity, "get_column_value", s));
 		return m;
 	}
 
 	@Override
 	public <T extends Entity> void save(T entity) {
-		String tablename = Utils.getSimpleClassName(entity);
+		String tablename = (String) Utils.getHiddenField(entity, "tablename");
 		Map<String, ?> data = DataSourceSupport.getEntityData(entity);
-		Map<String, ?> key = DataSourceSupport.getEntityKey(entity);
+		@SuppressWarnings("unchecked")
+		Map<String, ?> key = (Map<String, ?>) Utils.getHiddenField(entity,
+				"key");
 		if (key == null) {
-			DataSourceSupport.setEntityKey(entity, data);
+			Utils.setHiddenField(entity, "key", data);
 			this.insert(tablename, data);
 		} else
 			this.update(tablename, key, data);
@@ -110,8 +65,10 @@ public abstract class DataSourceSupport implements DataSource {
 
 	@Override
 	public <T extends Entity> void delete(T entity) {
-		String tablename = Utils.getSimpleClassName(entity);
-		Map<String, ?> key = DataSourceSupport.getEntityKey(entity);
+		String tablename = (String) Utils.getHiddenField(entity, "tablename");
+		@SuppressWarnings("unchecked")
+		Map<String, ?> key = (Map<String, ?>) Utils.getHiddenField(entity,
+				"key");
 		if (key != null)
 			this.delete(tablename, key);
 		// TODO DECIDE: deleting a non existing record
