@@ -5,7 +5,7 @@ I'd suggest SQLite since it requires no server or anything, just a file.
 
 ### Data model
 
-We'll be working on a database named `PERSON` with the following columns:
+We'll be working on a table named `PERSON` with the following columns:
 * `ID` an integer identifying the person
 * `NAME` the name of the person
 * `BORN` the person's day of birth
