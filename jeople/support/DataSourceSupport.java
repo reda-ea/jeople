@@ -42,7 +42,8 @@ public abstract class DataSourceSupport implements DataSource {
 	private static Map<String, ?> getEntityData(Entity entity) {
 		Map<String, Object> m = new HashMap<String, Object>();
 		@SuppressWarnings("unchecked")
-		List<String> columns = (List<String>) Utils.getHiddenField(entity,
+		//FIXME use EntityInfo
+				garbage List<String> columns = (List<String>) Utils.getHiddenField(entity,
 				"columns");
 		for (String s : columns)
 			m.put(s, Utils.runHiddenMethod(entity, "get_column_value", s));
@@ -51,7 +52,8 @@ public abstract class DataSourceSupport implements DataSource {
 
 	@Override
 	public <T extends Entity> void save(T entity) {
-		String tablename = (String) Utils.getHiddenField(entity, "tablename");
+		//FIXME use EntityInfo
+		garbage String tablename = (String) Utils.getHiddenField(entity, "tablename");
 		Map<String, ?> data = DataSourceSupport.getEntityData(entity);
 		@SuppressWarnings("unchecked")
 		Map<String, ?> key = (Map<String, ?>) Utils.getHiddenField(entity,
@@ -65,7 +67,8 @@ public abstract class DataSourceSupport implements DataSource {
 
 	@Override
 	public <T extends Entity> void delete(T entity) {
-		String tablename = (String) Utils.getHiddenField(entity, "tablename");
+		//FIXME use EntityInfo
+		garbage String tablename = (String) Utils.getHiddenField(entity, "tablename");
 		@SuppressWarnings("unchecked")
 		Map<String, ?> key = (Map<String, ?>) Utils.getHiddenField(entity,
 				"key");
@@ -82,7 +85,7 @@ public abstract class DataSourceSupport implements DataSource {
 	 * @return
 	 *         An object holding the status of the query.
 	 */
-	protected abstract Object select(String table);
+	protected abstract Object select(EntityInfo entityInfo);
 
 	/**
 	 * gets the next record using (and updating) the provided status.
@@ -100,7 +103,7 @@ public abstract class DataSourceSupport implements DataSource {
 	protected abstract void insert(String table, Map<String, ?> get_data);
 
 	protected abstract void update(String table, Map<String, ?> key,
-			Map<String, ?> get_data);
+			Map<String, ?> data);
 
 	protected abstract void delete(String table, Map<String, ?> key);
 

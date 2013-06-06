@@ -1,11 +1,14 @@
 package jeople.impl;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -148,21 +151,73 @@ public class JDBCDataSource extends DataSourceSupport {
 		}
 	}
 
+	protected class ColumnInfo {
+		public String tableName;
+		public int columnIndex;
+		public String columnName;
+		public String columnType;
+		public Class<?> attributeType;
+	}
+
 	// TODO use a proxy object instead of the actual ResultSet
-	protected Object getColumnValue(ResultSet resultSet, int index,
-			String typeName) {
+	protected Object getColumnValue(ResultSet resultSet, ColumnInfo columnInfo) {
 		try {
-			return resultSet.getObject(index);
+			if (columnInfo.attributeType.isAssignableFrom(Timestamp.class))
+				return resultSet.getTimestamp(columnInfo.columnIndex);
+			if (columnInfo.attributeType.isAssignableFrom(Date.class))
+				return resultSet.getDate(columnInfo.columnIndex);
+			if (columnInfo.attributeType.isAssignableFrom(Time.class))
+				return resultSet.getTime(columnInfo.columnIndex);
+			if (columnInfo.attributeType.isAssignableFrom(String.class))
+				return resultSet.getString(columnInfo.columnIndex);
+			if (columnInfo.attributeType.isAssignableFrom(Boolean.class)
+					|| columnInfo.attributeType.isAssignableFrom(boolean.class))
+				return resultSet.getBoolean(columnInfo.columnIndex);
+			if (columnInfo.attributeType.isAssignableFrom(Double.class)
+					|| columnInfo.attributeType.isAssignableFrom(double.class))
+				return resultSet.getDouble(columnInfo.columnIndex);
+			if (columnInfo.attributeType.isAssignableFrom(Float.class)
+					|| columnInfo.attributeType.isAssignableFrom(float.class))
+				return resultSet.getFloat(columnInfo.columnIndex);
+			if (columnInfo.attributeType.isAssignableFrom(Long.class)
+					|| columnInfo.attributeType.isAssignableFrom(long.class))
+				return resultSet.getLong(columnInfo.columnIndex);
+			if (columnInfo.attributeType.isAssignableFrom(Integer.class)
+					|| columnInfo.attributeType.isAssignableFrom(int.class))
+				return resultSet.getInt(columnInfo.columnIndex);
+			return resultSet.getObject(columnInfo.columnIndex);
 		} catch (SQLException e) {
 			throw new InternalError(e);
 		}
 	}
 
 	// TODO use a proxy object instead of the actual PreparedStatement
-	protected void setColumnValue(PreparedStatement statement, int index,
-			String typeName, Object value) {
+	protected void setColumnValue(PreparedStatement statement,
+			ColumnInfo columnInfo, Object value) {
 		try {
-			statement.setObject(index, value);
+			if (Timestamp.class.isAssignableFrom(value.getClass()))
+				statement.setTimestamp(columnInfo.columnIndex,
+						(Timestamp) value);
+			if (Date.class.isAssignableFrom(value.getClass()))
+				statement.setDate(columnInfo.columnIndex, (Date) value);
+			if (Time.class.isAssignableFrom(value.getClass()))
+				statement.setTime(columnInfo.columnIndex, (Time) value);
+			if (java.util.Date.class.isAssignableFrom(value.getClass()))
+				statement.setTimestamp(columnInfo.columnIndex, new Timestamp(
+						((java.util.Date) value).getTime()));
+			if (String.class.isAssignableFrom(value.getClass()))
+				statement.setString(columnInfo.columnIndex, (String) value);
+			if (Boolean.class.isAssignableFrom(value.getClass()))
+				statement.setBoolean(columnInfo.columnIndex, (Boolean) value);
+			if (Double.class.isAssignableFrom(value.getClass()))
+				statement.setDouble(columnInfo.columnIndex, (Double) value);
+			if (Float.class.isAssignableFrom(value.getClass()))
+				statement.setFloat(columnInfo.columnIndex, (Float) value);
+			if (Long.class.isAssignableFrom(value.getClass()))
+				statement.setLong(columnInfo.columnIndex, (Long) value);
+			if (Integer.class.isAssignableFrom(value.getClass()))
+				statement.setInt(columnInfo.columnIndex, (Integer) value);
+			statement.setObject(columnInfo.columnIndex, value);
 		} catch (SQLException e) {
 			throw new InternalError(e);
 		}
@@ -174,8 +229,8 @@ public class JDBCDataSource extends DataSourceSupport {
 			ResultSet rs = connection.getMetaData().getColumns(null, null,
 					table, column);
 			if (!rs.next())
-				throw new InternalError("Table or column not found for " + table + "."
-						+ column);
+				throw new InternalError("Table or column not found for "
+						+ table + "." + column);
 			String ret = rs.getString("TYPE_NAME");
 			rs.close();
 			return ret;
@@ -212,12 +267,14 @@ public class JDBCDataSource extends DataSourceSupport {
 			cs.statement.setObject(1, tfs.index.get(tfs.position));
 			cs.resultSet = cs.statement.executeQuery();
 			if (!cs.resultSet.next())
-				throw new InternalError("Record not found for " + tfs.table + "."
-						+ this.rowid + " = " + tfs.index.get(tfs.position));
+				throw new InternalError("Record not found for " + tfs.table
+						+ "." + this.rowid + " = "
+						+ tfs.index.get(tfs.position));
 			Map<String, ?> m = this.fetchData(cs.resultSet);
 			if (cs.resultSet.next())
-				throw new InternalError("Multiple record found for " + tfs.table + "."
-						+ this.rowid + " = " + tfs.index.get(tfs.position));
+				throw new InternalError("Multiple record found for "
+						+ tfs.table + "." + this.rowid + " = "
+						+ tfs.index.get(tfs.position));
 			cs.close();
 			++tfs.position;
 			return m;

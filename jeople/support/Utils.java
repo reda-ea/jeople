@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import jeople.Entity;
 import jeople.Query;
 import jeople.errors.InternalError;
+import jeople.support.DataSourceSupport.EntityInfo;
 
 /**
  * Internal utility class.
